@@ -52,6 +52,11 @@
             android:screenOrientation="landscape"
             android:theme="@style/SettingsTheme" />
 
+        <activity
+            android:name=".ScreenStreamActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/LauncherTheme" />
+
         <service
             android:name=".KeepAliveService"
             android:enabled="true"

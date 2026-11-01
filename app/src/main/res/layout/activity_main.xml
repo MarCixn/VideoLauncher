@@ -380,6 +380,17 @@
             android:padding="8dp"
             android:contentDescription="ARGB Control" />
 
+        <!-- Screen stream button -->
+        <ImageView
+            android:id="@+id/screenButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="32dp"
+            android:src="@drawable/ic_screen"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:contentDescription="Screen Stream" />
+
     </LinearLayout>
 
     <!-- Swipe hint -->

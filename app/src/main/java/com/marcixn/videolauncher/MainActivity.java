@@ -51,8 +51,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
     private MediaPlayer mediaPlayer;
-    private ImageView bluetoothButton, settingsButton, argbButton;
+    private ImageView bluetoothButton, settingsButton, argbButton, screenButton;
     private TextView clockText, swipeHint, folderIndicator, statsText;
+
+    // Screen streaming
+    private boolean isStreaming = false;
+    private String pcStreamIp = null;
+    private int selectedMonitor = 3; // Default to virtual monitor
+    private static final int STREAM_CONTROL_PORT = 5558;
+    private static final int STREAM_VIDEO_PORT = 8080;
     private LinearLayout bottomBar;
     private View fadeOverlay;
     private GestureDetector gestureDetector;
@@ -212,6 +219,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         bluetoothButton = findViewById(R.id.bluetoothButton);
         settingsButton = findViewById(R.id.settingsButton);
         argbButton = findViewById(R.id.argbButton);
+        screenButton = findViewById(R.id.screenButton);
         clockText = findViewById(R.id.clockText);
         swipeHint = findViewById(R.id.swipeHint);
         bottomBar = findViewById(R.id.bottomBar);
@@ -476,6 +484,216 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                 startActivity(intent);
             });
         }
+
+        if (screenButton != null) {
+            screenButton.setOnClickListener(v -> toggleScreenStream());
+            screenButton.setOnLongClickListener(v -> {
+                showMonitorSelectionDialog();
+                return true;
+            });
+        }
+    }
+
+    private void showMonitorSelectionDialog() {
+        if (pcStreamIp == null) {
+            Toast.makeText(this, "Brak połączenia z PC", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Request monitor list from PC
+        new Thread(() -> {
+            try {
+                DatagramSocket socket = new DatagramSocket();
+                socket.setSoTimeout(3000);
+                String command = "{\"action\":\"list_monitors\"}";
+                byte[] data = command.getBytes();
+                InetAddress address = InetAddress.getByName(pcStreamIp);
+                DatagramPacket sendPacket = new DatagramPacket(data, data.length, address, STREAM_CONTROL_PORT);
+                socket.send(sendPacket);
+
+                byte[] buffer = new byte[1024];
+                DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
+                socket.receive(receivePacket);
+                socket.close();
+
+                String response = new String(receivePacket.getData(), 0, receivePacket.getLength());
+                JSONObject json = new JSONObject(response);
+
+                if (json.has("monitors")) {
+                    org.json.JSONArray monitors = json.getJSONArray("monitors");
+                    int currentMon = json.optInt("current", 1);
+
+                    String[] items = new String[monitors.length()];
+                    for (int i = 0; i < monitors.length(); i++) {
+                        JSONObject mon = monitors.getJSONObject(i);
+                        int idx = mon.getInt("index");
+                        int w = mon.getInt("width");
+                        int h = mon.getInt("height");
+                        items[i] = "Monitor " + idx + " (" + w + "x" + h + ")";
+                        if (idx == currentMon) {
+                            items[i] += " ✓";
+                        }
+                    }
+
+                    runOnUiThread(() -> {
+                        new AlertDialog.Builder(this)
+                            .setTitle("Wybierz monitor")
+                            .setItems(items, (dialog, which) -> {
+                                int selectedMonitor = which + 1;
+                                setRemoteMonitor(selectedMonitor);
+                            })
+                            .show();
+                    });
+                }
+            } catch (Exception e) {
+                runOnUiThread(() -> Toast.makeText(this, "Błąd: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        }).start();
+    }
+
+    private void setRemoteMonitor(int monitorIndex) {
+        selectedMonitor = monitorIndex; // Store locally
+        new Thread(() -> {
+            try {
+                DatagramSocket socket = new DatagramSocket();
+                String command = "{\"action\":\"set_monitor\",\"monitor\":" + monitorIndex + "}";
+                byte[] data = command.getBytes();
+                InetAddress address = InetAddress.getByName(pcStreamIp);
+                DatagramPacket packet = new DatagramPacket(data, data.length, address, STREAM_CONTROL_PORT);
+                socket.send(packet);
+                socket.close();
+
+                runOnUiThread(() -> Toast.makeText(this, "Monitor " + monitorIndex + " wybrany", Toast.LENGTH_SHORT).show());
+            } catch (Exception e) {
+                runOnUiThread(() -> Toast.makeText(this, "Błąd: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        }).start();
+    }
+
+    private void toggleScreenStream() {
+        if (isStreaming) {
+            stopScreenStream();
+        } else {
+            startScreenStream();
+        }
+    }
+
+    private void startScreenStream() {
+        // Find PC IP from last stats connection or scan
+        if (pcStreamIp == null && lastPcStatsJson != null) {
+            // Try to get IP from the UDP sender (we'll set this when receiving stats)
+        }
+
+        // Default to .27 as specified by user
+        if (pcStreamIp == null) {
+            String localIp = getLocalIp();
+            if (localIp != null) {
+                String[] parts = localIp.split("\\.");
+                if (parts.length == 4) {
+                    pcStreamIp = parts[0] + "." + parts[1] + "." + parts[2] + ".27";
+                }
+            }
+        }
+
+        if (pcStreamIp == null) {
+            Toast.makeText(this, "Nie znaleziono PC", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Send start command to PC
+        new Thread(() -> {
+            try {
+                DatagramSocket socket = new DatagramSocket();
+                String command = "{\"action\":\"start_stream\",\"target\":\"" + getLocalIp() + "\"}";
+                byte[] data = command.getBytes();
+                InetAddress address = InetAddress.getByName(pcStreamIp);
+                DatagramPacket packet = new DatagramPacket(data, data.length, address, STREAM_CONTROL_PORT);
+                socket.send(packet);
+                socket.close();
+
+                runOnUiThread(() -> {
+                    isStreaming = true;
+                    updateScreenButtonState();
+                    Toast.makeText(this, "Uruchamianie streamu...", Toast.LENGTH_SHORT).show();
+
+                    // Wait a moment for PC to start streaming, then open VLC
+                    handler.postDelayed(() -> openStreamInVlc(), 1500);
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> Toast.makeText(this, "Błąd: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        }).start();
+    }
+
+    private void stopScreenStream() {
+        if (pcStreamIp == null) return;
+
+        new Thread(() -> {
+            try {
+                DatagramSocket socket = new DatagramSocket();
+                String command = "{\"action\":\"stop_stream\"}";
+                byte[] data = command.getBytes();
+                InetAddress address = InetAddress.getByName(pcStreamIp);
+                DatagramPacket packet = new DatagramPacket(data, data.length, address, STREAM_CONTROL_PORT);
+                socket.send(packet);
+                socket.close();
+
+                runOnUiThread(() -> {
+                    isStreaming = false;
+                    updateScreenButtonState();
+                    Toast.makeText(this, "Stream zatrzymany", Toast.LENGTH_SHORT).show();
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> Toast.makeText(this, "Błąd: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        }).start();
+    }
+
+    private void openStreamInVlc() {
+        String streamUrl = "http://" + pcStreamIp + ":" + STREAM_VIDEO_PORT;
+
+        // Open fullscreen stream activity
+        Intent streamIntent = new Intent(this, ScreenStreamActivity.class);
+        streamIntent.putExtra("stream_url", streamUrl);
+        streamIntent.putExtra("monitor", selectedMonitor);
+        startActivity(streamIntent);
+    }
+
+    private void updateScreenButtonState() {
+        if (screenButton != null) {
+            if (isStreaming) {
+                screenButton.setColorFilter(Color.parseColor("#00FF00"), PorterDuff.Mode.SRC_IN);
+            } else {
+                // Reset to accent color based on style
+                int accentColor;
+                switch (currentStyle) {
+                    case "neon": accentColor = Color.parseColor("#FF00FF"); break;
+                    case "minimal": accentColor = Color.parseColor("#FFFFFF"); break;
+                    case "red": accentColor = Color.parseColor("#FF0040"); break;
+                    default: accentColor = Color.parseColor("#00FFFF"); break;
+                }
+                screenButton.setColorFilter(accentColor, PorterDuff.Mode.SRC_IN);
+            }
+        }
+    }
+
+    private String getLocalIp() {
+        try {
+            java.util.Enumeration<java.net.NetworkInterface> interfaces = java.net.NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                java.net.NetworkInterface iface = interfaces.nextElement();
+                java.util.Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    if (!addr.isLoopbackAddress() && addr instanceof java.net.Inet4Address) {
+                        return addr.getHostAddress();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+        return null;
     }
 
     private void loadSettings() {
@@ -543,6 +761,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         if (argbButton != null) {
             // ARGB button keeps its RGB colors, just adjust alpha
             argbButton.setAlpha(0.9f);
+        }
+
+        if (screenButton != null && !isStreaming) {
+            screenButton.setColorFilter(accentColor, PorterDuff.Mode.SRC_IN);
         }
 
         if (bottomBar != null) {
@@ -920,6 +1142,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                     try {
                         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                         pcStatsSocket.receive(packet);
+
+                        // Save PC IP for streaming
+                        pcStreamIp = packet.getAddress().getHostAddress();
 
                         String data = new String(packet.getData(), 0, packet.getLength());
                         parsePcStats(data);
