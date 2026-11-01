@@ -8,6 +8,7 @@ Aplikacja na radio samochodowe z Androidem do sterowania ARGB LED i wyswietlania
 - Launcher z widgetami na pulpicie
 - **ARGB Control** - sterowanie paskami LED przez USB (STM32)
 - **PC Stats** - wyswietlanie statystyk CPU/GPU/RAM z komputera
+- **Screen Stream** - streaming ekranu PC z zdalnym klikaniem
 
 ### 2. STM32 ARGB Controller (`stm32_argb/`)
 Firmware na STM32F103C8T6 (Blue Pill) do sterowania paskami WS2812B/SK6812.
@@ -52,6 +53,25 @@ Skrypt Python wysylajacy statystyki PC przez UDP do aplikacji Android.
 - GPU temp
 - Network speed
 
+### 4. Screen Stream (`pc_stats_sender/screen_stream.py`)
+Streaming ekranu PC na radio Android przez MJPEG over HTTP.
+
+**Funkcje:**
+- Stream dowolnego monitora (w tym wirtualnego VDD)
+- Zdalne klikanie myszka - dotyk na radiu = klik na PC
+- Pinch-to-zoom - przyblizanie/oddalanie obrazu
+- Podwojne tapniecie - reset zoomu
+- Auto-reconnect przy zerwaniu polaczenia
+- Wybor monitora przez dlugie przytrzymanie ikony
+
+**Wymagania na PC:**
+- Python 3.10+
+- `pip install mss pillow`
+
+**Porty:**
+- 5558 UDP - komendy sterujace
+- 8080 HTTP - stream MJPEG
+
 ## Instalacja
 
 ### PC Stats Sender (na PC z Windows)
@@ -66,6 +86,24 @@ Skrypt automatycznie:
 - Uruchomi wysylanie statystyk
 
 **Deinstalacja:** uruchom `uninstall.bat`
+
+### Screen Stream (na PC z Windows)
+
+1. Zainstaluj Python 3.10+ z python.org
+2. Zainstaluj zaleznosci: `pip install mss pillow`
+3. Uruchom `install_stream.bat` lub recznie:
+   ```
+   cd pc_stats_sender
+   python screen_stream.py
+   ```
+4. Dodaj regule firewall: `add_firewall_rule.bat` (jako Administrator)
+
+**Uzycie na radiu:**
+- Kliknij ikone monitora na ekranie glownym
+- Dlugie przytrzymanie = wybor monitora
+- Dotyk = klik myszka na PC
+- Pinch = zoom
+- Podwojne tapniecie = reset zoom
 
 ### STM32 Firmware
 
@@ -99,6 +137,7 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 3. Otworz aplikacje VideoLauncher na radiu
 4. Uzyj widgetu ARGB Control do sterowania LED
 5. Widget PC Stats wyswietla statystyki komputera
+6. Ikona monitora uruchamia Screen Stream
 
 ## Protokol komunikacji
 
@@ -118,6 +157,15 @@ Port: 5556
 Format JSON:
 ```json
 {"cpu": 45.2, "gpu": 30.0, "ram": 65.1, "gpu_temp": 55, "net": 1.2}
+```
+
+### UDP (Screen Stream Control)
+Port: 5558
+Format JSON:
+```json
+{"action": "start_stream", "monitor": 3}
+{"action": "click", "x": 0.5, "y": 0.5, "monitor": 3}
+{"action": "list_monitors"}
 ```
 
 ## Licencja
