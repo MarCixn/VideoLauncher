@@ -27,8 +27,20 @@ PA1  - LED wewn. (60 LED)
 PA6  - LED wentylator (16 LED)
 PA8  - PWM wentylator
 PB0  - Przekaznik audio A/B
+PB12 - Przycisk 1 (audio A/B)
+PB13 - Przycisk 2 (sterowanie LED)
 USB  - Komunikacja z radiem
 ```
+
+**Fizyczne przyciski:**
+- **Przycisk 1 (PB12)** - przelacza przekaznik audio A/B
+- **Przycisk 2 (PB13)** - wielofunkcyjny:
+  - 1 klik: zmienia tryb/efekt
+  - 2 klik: zmienia predkosc
+  - 3 klik: zmienia jasnosc
+  - 4 klik: zmienia kolor efektu
+  - 5 klik: selektor strefy (zewn/wewn/wentylator)
+  - 6 klik: auto mode (zmienia efekt co 10s)
 
 ### 3. PC Stats Sender (`pc_stats_sender/`)
 Skrypt Python wysylajacy statystyki PC przez UDP do aplikacji Android.
