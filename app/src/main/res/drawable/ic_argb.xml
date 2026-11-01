@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- RGB circles representing LED colors -->
+    <path
+        android:fillColor="#FF0000"
+        android:pathData="M8,6 A4,4 0 1,1 8,6.01" />
+
+    <path
+        android:fillColor="#00FF00"
+        android:pathData="M16,6 A4,4 0 1,1 16,6.01" />
+
+    <path
+        android:fillColor="#0000FF"
+        android:pathData="M12,14 A4,4 0 1,1 12,14.01" />
+
+    <!-- Connection lines -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1"
+        android:pathData="M8,10 L12,14 M16,10 L12,14 M8,6 L16,6" />
+
+</vector>

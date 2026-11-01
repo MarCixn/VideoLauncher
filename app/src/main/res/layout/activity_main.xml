@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- Video background (SurfaceView - no audio initialization) -->
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <!-- Fade overlay for transitions -->
+    <View
+        android:id="@+id/fadeOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:visibility="gone" />
+
+    <!-- Clock display -->
+    <TextView
+        android:id="@+id/clockText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:text="12:00"
+        android:textColor="#FFFFFF"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:shadowColor="#000000"
+        android:shadowRadius="4"
+        android:shadowDx="2"
+        android:shadowDy="2" />
+
+    <!-- Music info display (center top) -->
+    <LinearLayout
+        android:id="@+id/musicInfoContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="#60000000"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:minWidth="300dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/musicTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tytuł utworu"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:maxWidth="400dp"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:shadowColor="#000000"
+            android:shadowRadius="3"
+            android:shadowDx="1"
+            android:shadowDy="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/musicState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▶"
+                android:textColor="#00FFFF"
+                android:textSize="13sp"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/musicArtist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Artysta"
+                android:textColor="#B0FFFFFF"
+                android:textSize="13sp"
+                android:maxWidth="350dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:shadowColor="#000000"
+                android:shadowRadius="2"
+                android:shadowDx="1"
+                android:shadowDy="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Folder indicator -->
+    <TextView
+        android:id="@+id/folderIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:text="Movies"
+        android:textColor="#B0FFFFFF"
+        android:textSize="14sp"
+        android:shadowColor="#000000"
+        android:shadowRadius="3"
+        android:shadowDx="1"
+        android:shadowDy="1" />
+
+    <!-- Stats display (text mode) -->
+    <TextView
+        android:id="@+id/statsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginTop="38dp"
+        android:layout_marginStart="24dp"
+        android:text="CPU: 0%  RAM: 0%"
+        android:textColor="#80FFFFFF"
+        android:textSize="11sp"
+        android:fontFamily="monospace"
+        android:visibility="gone"
+        android:shadowColor="#000000"
+        android:shadowRadius="2"
+        android:shadowDx="1"
+        android:shadowDy="1" />
+
+    <!-- Stats bars (bar mode) - Left side, horizontal bars -->
+    <LinearLayout
+        android:id="@+id/statsBarsLeft"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:orientation="vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="#60000000"
+        android:visibility="gone">
+
+        <!-- CPU Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="3dp">
+            <TextView
+                android:id="@+id/cpuLabel"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="CPU"
+                android:textColor="#00FFFF"
+                android:textSize="9sp" />
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="10dp"
+                android:background="#40FFFFFF">
+                <View
+                    android:id="@+id/cpuBar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:background="#00FFFF" />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/cpuValue"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="0%"
+                android:textColor="#00FFFF"
+                android:textSize="9sp"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <!-- GPU Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="3dp">
+            <TextView
+                android:id="@+id/gpuLabel"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="GPU"
+                android:textColor="#FF00FF"
+                android:textSize="9sp" />
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="10dp"
+                android:background="#40FFFFFF">
+                <View
+                    android:id="@+id/gpuBar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:background="#FF00FF" />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/gpuValue"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="0%"
+                android:textColor="#FF00FF"
+                android:textSize="9sp"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <!-- RAM Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="3dp">
+            <TextView
+                android:id="@+id/ramLabel"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="RAM"
+                android:textColor="#00FF00"
+                android:textSize="9sp" />
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="10dp"
+                android:background="#40FFFFFF">
+                <View
+                    android:id="@+id/ramBar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:background="#00FF00" />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/ramValue"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="0%"
+                android:textColor="#00FF00"
+                android:textSize="9sp"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <!-- GPU Temp Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="3dp">
+            <TextView
+                android:id="@+id/gpuTempLabel"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="GPU°"
+                android:textColor="#FF6600"
+                android:textSize="9sp" />
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="10dp"
+                android:background="#40FFFFFF">
+                <View
+                    android:id="@+id/gpuTempBar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:background="#FF6600" />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/gpuTempValue"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="0°"
+                android:textColor="#FF6600"
+                android:textSize="9sp"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <!-- Network Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/netLabel"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:text="NET"
+                android:textColor="#00AAFF"
+                android:textSize="9sp" />
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="10dp"
+                android:background="#40FFFFFF">
+                <View
+                    android:id="@+id/netBar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:background="#00AAFF" />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/netValue"
+                android:layout_width="38dp"
+                android:layout_height="wrap_content"
+                android:text="0 MB"
+                android:textColor="#00AAFF"
+                android:textSize="9sp"
+                android:gravity="end" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Bottom bar -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom"
+        android:background="#80000000"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp">
+
+        <!-- Bluetooth button -->
+        <ImageView
+            android:id="@+id/bluetoothButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="32dp"
+            android:src="@drawable/ic_bluetooth"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:contentDescription="Bluetooth" />
+
+        <!-- Settings button -->
+        <ImageView
+            android:id="@+id/settingsButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_settings"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:contentDescription="Settings" />
+
+        <!-- ARGB button -->
+        <ImageView
+            android:id="@+id/argbButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="32dp"
+            android:src="@drawable/ic_argb"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:contentDescription="ARGB Control" />
+
+    </LinearLayout>
+
+    <!-- Swipe hint -->
+    <TextView
+        android:id="@+id/swipeHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="80dp"
+        android:text="swipe: up=apps  left/right=folders"
+        android:textColor="#60FFFFFF"
+        android:textSize="11sp" />
+
+</FrameLayout>

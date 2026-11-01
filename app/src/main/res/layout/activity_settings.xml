@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF1A1A1A"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Video Launcher Settings"
+            android:textColor="#00FFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Style/Theme Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Styl:"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/styleCyberpunk"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="Cyber"
+                android:textSize="11sp"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/styleNeon"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="Neon"
+                android:textSize="11sp"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/styleMinimal"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="Minimal"
+                android:textSize="11sp"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/styleRed"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="Red"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Show Clock -->
+        <CheckBox
+            android:id="@+id/showClockCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pokazuj godzine"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:checked="true"
+            android:buttonTint="#00FFFF" />
+
+        <!-- Show Music Info -->
+        <CheckBox
+            android:id="@+id/showMusicInfoCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pokazuj info o muzyce (Bluetooth)"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:checked="true"
+            android:layout_marginBottom="16dp"
+            android:buttonTint="#00FFFF" />
+
+        <!-- Folder Presets (swipe left/right) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Foldery (swipe left/right):"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Folder 1 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+            <EditText
+                android:id="@+id/folderPreset1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:hint="Folder 1"
+                android:text="/sdcard/Movies"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#666666"
+                android:background="#33FFFFFF"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:textSize="12sp" />
+            <CheckBox
+                android:id="@+id/folder1Fade"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Fade"
+                android:textColor="#AAAAAA"
+                android:textSize="10sp"
+                android:buttonTint="#00FFFF" />
+            <CheckBox
+                android:id="@+id/folder1Shuffle"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Shuffle"
+                android:textColor="#AAAAAA"
+                android:textSize="10sp"
+                android:buttonTint="#00FFFF" />
+        </LinearLayout>
+
+        <!-- Folder 2 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+            <EditText
+                android:id="@+id/folderPreset2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:hint="Folder 2"
+                android:text="/sdcard/Download/wideo"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#666666"
+                android:background="#33FFFFFF"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:textSize="12sp" />
+            <CheckBox
+                android:id="@+id/folder2Fade"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Fade"
+                android:textColor="#AAAAAA"
+                android:textSize="10sp"
+                android:buttonTint="#00FFFF" />
+            <CheckBox
+                android:id="@+id/folder2Shuffle"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Shuffle"
+                android:textColor="#AAAAAA"
+                android:textSize="10sp"
+                android:buttonTint="#00FFFF" />
+        </LinearLayout>
+
+        <!-- Folder 3 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+            <EditText
+                android:id="@+id/folderPreset3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:hint="Folder 3"
+                android:text="/sdcard/Download"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#666666"
+                android:background="#33FFFFFF"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:textSize="12sp" />
+            <CheckBox
+                android:id="@+id/folder3Fade"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Fade"
+                android:textColor="#AAAAAA"
+                android:textSize="10sp"
+                android:buttonTint="#00FFFF" />
+            <CheckBox
+                android:id="@+id/folder3Shuffle"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Shuffle"
+                android:textColor="#AAAAAA"
+                android:textSize="10sp"
+                android:buttonTint="#00FFFF" />
+        </LinearLayout>
+
+        <!-- Folder 4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+            <EditText
+                android:id="@+id/folderPreset4"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:hint="Folder 4"
+                android:text="/sdcard/DCIM"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#666666"
+                android:background="#33FFFFFF"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:textSize="12sp" />
+            <CheckBox
+                android:id="@+id/folder4Fade"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Fade"
+                android:textColor="#AAAAAA"
+                android:textSize="10sp"
+                android:buttonTint="#00FFFF" />
+            <CheckBox
+                android:id="@+id/folder4Shuffle"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Shuffle"
+                android:textColor="#AAAAAA"
+                android:textSize="10sp"
+                android:buttonTint="#00FFFF" />
+        </LinearLayout>
+
+        <!-- Play Mode -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tryb odtwarzania:"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/playModeGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/loopRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loop (powtarzaj jeden film)"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/sequentialRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Po kolei (wszystkie filmy)"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+        </RadioGroup>
+
+        <!-- Duration (only for sequential) -->
+        <TextView
+            android:id="@+id/durationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Czas odtwarzania:"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <RadioGroup
+            android:id="@+id/durationGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
+
+            <RadioButton
+                android:id="@+id/fullVideoRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Caly film"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/partialRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pierwsze X sekund:"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/secondsInput"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="10"
+            android:inputType="number"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#666666"
+            android:visibility="gone"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Stats Display -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Statystyki:"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp" />
+
+        <CheckBox
+            android:id="@+id/showAndroidStats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pokaż statystyki Android (CPU/RAM)"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:buttonTint="#00FFFF" />
+
+        <CheckBox
+            android:id="@+id/showPcStats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pokaż statystyki PC (przez sieć)"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:buttonTint="#00FFFF" />
+
+        <!-- Stats display mode -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tryb wyświetlania statystyk:"
+            android:textColor="#AAAAAA"
+            android:textSize="12sp"
+            android:layout_marginTop="8dp" />
+
+        <RadioGroup
+            android:id="@+id/statsDisplayMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+
+            <RadioButton
+                android:id="@+id/statsTextMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tekst"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/statsBarsMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Słupki"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:layout_marginStart="16dp" />
+
+        </RadioGroup>
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/saveBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ZAPISZ"
+            android:textSize="18sp"
+            android:background="#00FFFF"
+            android:textColor="#000000" />
+
+    </LinearLayout>
+</ScrollView>
